@@ -7,12 +7,12 @@
   - {} 내부에서만 접근 가능
 <br>  
 
-## Variable
+## Variable 
+**r/w (read & write)**
 ### let
 **변수 선언 키워드**  
 ES6에 추가  
 mutable data type: 값 변경 가능
-<br>  
 
 ### var
 ES6 이전에 사용되었던 **변수 선언 키워드**  
@@ -21,6 +21,28 @@ ES6 이전에 사용되었던 **변수 선언 키워드**
 ⚠️ block scope 없음 
 #### var hosting
 📍 선언 위치와 별개로 항상 제일 위로 선언을 끌어 올리는 것  
+```javascript
+// let (added in ES6)
+let globalName = 'global name';
+{
+  let name = 'ellie';
+  console.log(name);
+  name = 'hello';
+  console.log(name);
+  console.log(globalName);
+}
+console.log(name);
+console.log(globalName);
+
+// var (don't ever use this!)
+// var hoisting (move declaration from bottom to top)
+// has no block scope
+{
+  age = 4;
+  var age;
+}
+console.log(age);
+```
 <br>  
 
 ### ES6의 호환성
@@ -29,6 +51,7 @@ ES6 이전에 사용되었던 **변수 선언 키워드**
 <br>  
 
 ## Constants 
+**r (read only)**   
 변수의 값을 할당하는 경우 포인터를 이용해서 값의 변경이 가능하지만, Constants의 경우 포인터가 잠겨 있어 **값을 선언함과 동시에 변경이 불가능**함   
 immutable data type  
 
@@ -46,11 +69,13 @@ let | const
 ## Variable Types
 ### Primitive type  
 - 더 이상 쪼개질 수 없는 single item  
+- **값 자체**가 메모리에 저장 
 - ex) number, string, boolean, null, undefined, symbol  
 <br>  
 
 ### Object type
 - 아이템을 묶어서 box container로 관리 
+- ref를 통해서 실제로 object가 담겨 있는 메모리를 가르키므로 **레퍼런스**가 메모리에 저장됨
 - ex) function, first-class function
 
   #### first-class function 이란?
