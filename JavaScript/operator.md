@@ -1,5 +1,3 @@
-[TOC]
-
 # 연산자
 ## String concatenation
 ```javascript
@@ -7,8 +5,8 @@ console.log('my' + ' cat'); // my cat
 console.log('1' + 2); // 12
 console.log(`string literals: 1 + 2 = ${1 + 2}`); // string literals: 1 + 2 = 3
 ```
-
 strirng literals에서는 특수기호나 줄바꿈 사용이 가능
+<br>
 
 ## Numeric operators
 ```javascript
@@ -19,6 +17,7 @@ console.log(1 * 1); // multiply
 console.log(5 % 2); // remainder
 console.log(2 ** 3); // exponentiation
 ```
+<br>
 
 ## Increment/Decrement operators
 ```javascript
@@ -36,6 +35,7 @@ console.log(`preDecrement: ${preDecrement}, counter: ${counter}`); // 3 3
 const postDecrement = counter--;
 console.log(`postDecrement: ${postDecrement}, counter: ${counter}`); // 3 2
 ```
+<br>
 
 ## Assignment operators
 ```javascript
@@ -46,6 +46,7 @@ x -= y;
 x *= y;
 x /= y;
 ```
+<br>
 
 ## Comparison operators
 ```javascript
@@ -95,6 +96,7 @@ function check() {
 // ! (not)
 console.log(!value1); // false
 ```
+<br>
 
 ## Equality
 ### == (loose equality)
@@ -148,6 +150,7 @@ console.log(null === undefined);
 > 4번) empty string(`''`)은 boolean 타입이 아니므로 false  
 > 5번) `null`과 `undefined`는 동일한 것으로 간주되므로 true ⚠️  
 > 6번) `null`과 `undefined`는 다른 타입이므로 false   
+<br>
 
 ## Conditional operators
 ### if, else if, else 
@@ -163,10 +166,13 @@ if (name === 'ellie') {
 }
 // Welcome, Ellie!
 ```
+<br>
 
 ## Ternary operator 
 ### condition ? vlaue1 : value2
+삼항 연산자 
 `console.log(name === 'ellie' ? 'yes' : 'no');`
+<br>
 
 ## Switch statement
 ```javascript
@@ -187,6 +193,7 @@ switch (browser) {
     break;
 }
 ```
+<br>
 
 ## Loops
 ### while loop
@@ -260,10 +267,5 @@ for (let i = 0; i <= 10; i++) {
 ### label
 `break`나 `continue`구문과 함께 사용   
 요즘은 사용하지 않는 추세  
-
-
-
-
-
 
 
