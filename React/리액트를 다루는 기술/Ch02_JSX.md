@@ -1,6 +1,6 @@
 # 2.1 코드 이해하기
 
-```javascript
+```jsx
 import React from 'react';
 ```
 
@@ -10,7 +10,7 @@ import React from 'react';
 
 (참고, Node.js에서는 require라는 구문으로 패키지를 불러옴)
 
-### **번들러(Bundler)**
+**번들러(Bundler)**
 
 : 파일을 묶듯이 연결함
 
@@ -20,7 +20,7 @@ ex. **웹팩**, Parcel, browserify
 
 → 번들러 도구 사용하면 import로 모듈을 불러왔을 때 불러온 모듈을 모두 합쳐서 하나의 파일을 생성! 또 최적화 과정에서 여러 개의 파일로 분리 가능
 
-### **로더(Loader)**
+**로더(Loader)**
 
 웹팩의 로더 기능 : svg 파일이나 css파일을 불러와 사용 가능!
 
@@ -30,7 +30,6 @@ ex. **웹팩**, Parcel, browserify
 
 → 원래는 직접 설치해야 하나, create-react-app이 작업을 대신 함!
 
----
 
 # 2.2 JSX란?
 
@@ -42,7 +41,7 @@ JSX형식으로 작성한 코드 : 브라우저에서 실행되기 전에 코드
 
 JSX의 JavaScript 변환
 
-```javascript
+```jsx
 // JSX
 function App() {
 	return {
@@ -52,7 +51,7 @@ function App() {
 	);
 ```
 
-```javascript
+```jsx
 // JavaScript
 function App() {
 	return React.createElement("div", null, "Hello", React.createElement("b", null, "react");
@@ -61,7 +60,6 @@ function App() {
 
 ⇒ 컴포넌트 렌더링할 때마다 매번 React.createElement() 함수 사용? 매우 불편!!!
 
----
 
 # 2.3 JSX의 장점
 
@@ -79,7 +77,19 @@ function App() {
 
 **JSX에서 HTML 태그 & 컴포넌트도 작성 가능**
 
----
+`ReactDOM.render`
+
+- 컴포넌트 렌더링 역할
+- react-dom 모듈을 불러와 사용
+- 첫번째 파라미터: 페이지에 렌더링할 내용을 JSX 형태로 작성
+- 두번째 파라미터: 해당 JSX를 렌더링할 document 내부 요소 설정
+
+`<React.StrictMode>`
+
+- 리액트 레걷시 기능들을 사용하지 못하게 하는 기능
+- 완전히 사라지게될 옛 기능을 사용했을 때 경고 출력
+
+
 
 # 2.4 JSX 문법
 
@@ -87,40 +97,41 @@ function App() {
 
 : 컴포넌트에 여러 요소가 있다면 반드시 부모 요소 하나로 감싸야 한다
 
-```javascript
+```jsx
 import React from 'react'
 
 function App() {
   return (
-    **<div>**
+    <div>
       <h1>Hello, React!</h1>
       <h2>잘 작동하니?</h2> 
-    **</div>**
+    </div>
   );
 }
 
 export default App;
 ```
 
-- 여래 개의 요소는 하나의 부모에 의해 감싸야 한다
+- 여래 개의 요소는 **하나의 부모**에 의해 감싸야 한다
 - Virtual DOM에서 컴포넌트 **변화를 감지해낼 때 효율적으로 비교**하기 위해 **컴포넌트 내부 역시 하나의 트리 구조로 이루어져야 하는 규칙!**
+- `<Fragment></Fragment>` `<></>`
 
 ## 2.4.2 자바스크립트 표현
 
-JSX
+### JSX
 
 - DOM 요소를 렌더링하는 기능
 - **JSX 내부에 자바스크립트 표현식 사용 가능 : 코드를 {}로 감싼다**
 
-```javascript
+```jsx
 import React from 'react'
 
 function App() {
-  **const name = '리액트'**
+  const name = '리액트'
 
   return (
     <div>
-      <h1>**{name}** 안녕!</h1>
+      <h1>{name} 안녕!</h1>
       <h2>잘 작동하니?</h2> 
     </div>
   );
@@ -149,7 +160,7 @@ JSX 내부의 자바스크립트 표현식에서 if문 사용 불가능
 
 ! 조건부 연산자 == 삼항 연산자
 
-```javascript
+```jsx
 import React from 'react'
 
 function App() {
@@ -176,7 +187,7 @@ export default App;
 - 조건부 연산자를 통해 구현 가능
 - AND 연산자 이용시 더 짧게도 가능
 
-```javascript
+```jsx
 import React from 'react'
 
 function App() {
@@ -208,14 +219,14 @@ vs.
 
 **⇒ 어떤 값이 undefined일 수 있다면 OR(||) 연산자를 통해 undefined일 때의 값을 지정해 오류 방지**
 
-```javascript
+```jsx
 import React from 'react'
 import './App.css'
 
 function App() {
   const name = '리액트'
 
-  **return (name || '값이 undefined입니다.');**
+  return (name || '값이 undefined입니다.');
 }
 
 export default App;
@@ -225,7 +236,7 @@ export default App;
 
 ex. name 값이 undefined일때 보여주고 싶은 문구가 있는 경우
 
-```javascript
+```jsx
 import React from 'react'
 import './App.css'
 
@@ -246,7 +257,7 @@ export default App;
 
 ex. background-color ⇒ backgroundColor
 
-```javascript
+```jsx
 import React from 'react'
 import './App.css'
 
@@ -262,8 +273,93 @@ function App() {
     padding : 16
   }
 
-  return <div style={**style**}>{name}</div>;
+  return <div style={style}>{name}</div>;
 }
 
 export default App;
 ```
+
+## 2.4.7 class 대신 className
+
+일반 HTML : css 사용시 class 라는 속성을 설정
+
+ex. <div class="myclass"></div>
+
+**JSX : class가 아닌 className으로 설정**
+
+src/App.css
+
+```css
+.react {
+  background: aqua;
+  color: black;
+  font-size: 48px;
+  font-weight: bold;
+  padding: 16px;
+}
+```
+
+src/App.js
+
+```jsx
+import React from 'react'
+import './App.css'
+
+function App() {
+  const name = "리액트"
+
+  return <div className="react">{name}</div>;
+}
+
+export default App;
+```
+
+## 2.4.8 꼭 닫아줘야 하는 태그
+
+JSX에서는 태그를 닫지 않으면 오류 발생!
+
+```jsx
+<input></input>
+<input /> // self-closing : 태그 사이에 별 내용이 들어가지 않는 경우
+```
+
+HTML에서는 <input>, <br>은 열기만하고 닫지 않았음
+
+## 2.4.9 주석
+
+```jsx
+{*/ 주석은 이렇게 작성한다 */}
+// 1번 주석과
+/* 2번 주석은 페이지에 그대로 나타남*/
+
+```
+
+
+# 2.5 ESLint와 Prettier 적용하기
+
+## 2.5.1 ESLint
+
+문법 검사 도구
+
+코드 실수시 경고 메세지를 vsCode 에디터에서 바로 확인
+
+문제 탭 열기 : 상단메뉴 - 보기 > 문제
+
+초록 줄 코드 : 무시 가능
+
+빨간 줄 코드 : 반드시 고칠 것
+
+## 2.5.2 Prettier
+
+가독성, 코드 정리
+
+*Beautify와 충돌 주의
+
+
+# 2.6 정리
+
+JSX는 HTML과 비슷하지만 완전히 동일하진 않다!
+
+코드는 XML 형식이지만, 실제로는 JavaScript 객체이며, 용도와 문법도 조금씩 다르다!
+
+2.4 절의 문법을 잘 읽혀 둘 것!
