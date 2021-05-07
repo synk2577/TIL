@@ -253,7 +253,7 @@ export default App;
 
 리액트에서 DOM 요소에 **스타일 적용할 때 객체 형태로 넣어**주어야 함!
 
-스타일 이름은 **카멜 표기법(camelCase)**으로 작성해야 함
+스타일 이름은 **카멜 표기법(camelCase)** 으로 작성해야 함
 
 ex. background-color ⇒ backgroundColor
 
