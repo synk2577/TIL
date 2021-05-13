@@ -5,11 +5,11 @@
 - **메소드**: 함수
 
 ### 자바스크립트는 객체 기반 언어
-1. [**코어** 객체](#코어-객체) : 언제 어디서나 사용 가능한 기본 객체 -> 웹 페이지 자바스크립트 코드 or 서버에서 사용 가능   
+1. [**코어 객체**](#코어-객체) : 언제 어디서나 사용 가능한 기본 객체 -> 웹 페이지 자바스크립트 코드 or 서버에서 사용 가능   
   ex. `Array`, `Date` ...
-2. [**HTML DOM** 객체](#HTML-DOM): HTML 문서에 작성된 각 HTML 태그들을 객체화 한 것 -> HTML 문서의 내용/모양을 제어하기 위한 목적     
+2. [**HTML DOM 객체**](#HTML-DOM) : HTML 문서에 작성된 각 HTML 태그들을 객체화 한 것 -> HTML 문서의 내용/모양을 제어하기 위한 목적     
   ex. `document`, `body` ...
-3. [**브라우저** 객체](#브라우저-객체): 브라우저를 제어하기 위해 제공되는 객체   
+3. [**브라우저 객체**](#브라우저-객체) : 브라우저를 제어하기 위해 제공되는 객체   
   ex. `window`, `history` ...
 
 <br>
@@ -54,7 +54,7 @@ var hi = "hi";
 
 <br>    
 
-## HTML DOM 
+## HTML DOM
 Document Object Model   
 목적: HTML 태그가 출력된 모양/콘텐츠 **제어**
 
@@ -118,12 +118,73 @@ Document Object Model
 <br>
 
 ## 브라우저 객체
+
 ### BOM (Browser Object Model) 
 자바스크립트로 **브라우저를 제어**하기 위해 지원되는 객체들로 HTML 페이지 내용과 관계 없음     
-국제 표준이 없어 브라우저마다 객체들이 
+국제 표준이 없어 브라우저마다 객체들이 조금씩 다름
+
 ### 브라우저 공통 BOM 기능
 - `window`
 - `navigator`
 - `history`
 - `location`
 - `screen`
+
+#### 1. `window` 객체
+열려있는 브라우저 윈도우 or 탭 윈도우의 속성을 나타내는 객체
+브라우저 윈도우나 탭 윈도우마다 별도의 window 객체 생성
+```javascript
+// 윈도우 열기
+window.open(sURL, sWindowName, sFeature)
+
+// 윈도우 닫기
+window.close()
+
+// 윈도우 위치 및 크기 조절
+window.moveBy()
+window.moveTo()
+window.resizeBy()
+window.resizeTo()
+
+```
+#### 2. `location` 객체
+윈도우에 로드된 웹 페이지의 **URL 정보**를 나타내는 객체
+```javascript
+// 현재 윈도우에 웹페이지 열기
+window.location = "https://www.google.com/";
+window.location.href = "https://www.google.com/";
+window.location.assign("https://www.google.com/");
+window.location.replace("https://www.google.com/");
+
+// 새 윈도우에 웹페이지 열기
+var win = window.open(); // 빈 윈도우 열기
+win.location = "https://www.google.com/"; // 구글 페이지 로드
+```
+#### 3. `navigator` 객체
+현재 작동중인 브라우저에 대한 다양한 정보를 나타내는 객체  
+
+#### 4. `screen` 객체
+브라우저가 실행되는 **스크린 장치에 관한 정보**를 담고 있는 객체
+
+#### 5. `history` 객체
+윈도우에서 **방문한 웹페이지 리스트**(히스토리)를 나태내는 객체
+```javascript
+// length 프로퍼티: 히스토리 리스트에 있는 엔트리 수
+
+// 이전 페이지 이동
+history.back();
+history.go(-1);
+
+// 다음 페이지 이동
+history.forward();
+history.go(1); 
+```
+
+
+
+
+
+
+
+
+
