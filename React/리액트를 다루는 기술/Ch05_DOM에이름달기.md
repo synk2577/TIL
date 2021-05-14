@@ -1,16 +1,13 @@
 ### DOM 요소의 id
 
-`<div **id="my-element"**></div>`
-
+`<div id="my-element"></div>`
 : html에서 **dom 요소에 이름 부여**하는 방식
-
 → CSS, JavaScript에서 해당 id를 가진 요소를 찾아서 작업 가능
 
 ### ref (reference)
-
 : 리액트 프로젝트 내부에서 **DOM에 이름을 다는 방법**
 
-
+<br>
 
 # 5.1 ref는 어떤 상황에서 사용해야 할까?
 
@@ -110,24 +107,22 @@ export default App;
 
 (추후 App 컴포넌트에서 ref를 사용할 것이기 때문에 미리 클래스형 컴포넌트로 수정!
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/025a8934-b325-4e30-acf3-dcafd01a08e1/_2020-11-13__9.35.53.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/025a8934-b325-4e30-acf3-dcafd01a08e1/_2020-11-13__9.35.53.png)
+<img src="./Images/ch05/01.png" width="300px">
 
 ## 5.1.3 DOM을 꼭 사용해야 하는 상황
 
-앞 예제서는 state를 사용해 필요한 기능을 구현했지만, state만으로 해결할 수 없는 기능도 존재
-
-- **특정 input에 포커스 주기**
+state만으로 해결할 수 없는 기능
+- **특정 `input`에 포커스 주기**
 - **스크롤 박스 조작하기**
 - **Canvas 요소에 그림 그리기**
 
 ⇒ 이러한 상황에서 **ref를 사용해 DOM에 직접 접근!!**
 
+<br> 
 
+# 5.2 `ref` 사용
 
-# 5.2 ref 사용
-
-ref를 사용하는 2가지 방법
-
+`ref`의 2가지 사용법
 1. **콜백함수**를 통한 ref 설정
 2. **createRef**를 통한 ref 설정
 
@@ -147,9 +142,9 @@ ref를 사용하는 2가지 방법
 - ref 이름은 원하는 것으로 자유롭게 지정
 - DOM 타입과 관계없이 `this.superman = ref`처럼 마음대로 지정
 
-## 5.2.2 createRef를 통한 ref 설정
+## 5.2.2 `createRef`를 통한 ref 설정
 
-: 리액트에 내장되어 있는 createRef 함수 사용
+: 리액트에 내장되어 있는 `createRef` 함수 사용
 
 (src > RefSample.js)
 
@@ -157,18 +152,18 @@ ref를 사용하는 2가지 방법
 import React, {Component} from 'react';
 
 class RefSample extends Component {
-    **input = React.createRef(); // 1. 멤버 변수 선언**
+    input = React.createRef(); // 1. 멤버 변수 선언
 
     // DOM에 접근하려면 this.input.current를 조회
     handleFocus = () => {
-        **this.input.current.focus();**
+        this.input.current.focus();
     }
 
-    **// 2. 해당 멤버 변수를 달고자 하는 요소에 ref porps로 넣기**
+    // 2. 해당 멤버 변수를 달고자 하는 요소에 ref porps로 넣기
     render() {
         return(
             <div>
-                <input **ref={this.input}**/>
+                <input ref={this.input}/>
             </div>
         );
     }
@@ -195,9 +190,9 @@ export default RefSample;
 
 ```jsx
 <input
-	**ref={(ref) => this.input=ref}**
+	ref={(ref) => this.input=ref}
 .. />
-**// 콜백함수를 사용해 ValidationSample 컴포넌트에 ref 달기**
+// 콜백함수를 사용해 ValidationSample 컴포넌트에 ref 달기
 ```
 
 ### 5.2.3.2 버튼 onClick 이벤트 코드 수정
@@ -210,7 +205,7 @@ handleButtonClick = () => {
             clicked:true,
             validated: this.state.password ==='0000'
         })
-        **this.input.focus(); // onClick 이벤트 발생; input에 포커스 줌**
+        this.input.focus(); // onClick 이벤트 발생; input에 포커스 줌
     }
 ```
 
@@ -220,7 +215,7 @@ handleButtonClick = () => {
 
 ⇒ (결과) 버튼 클릭 후, focus가 input으로 넘어간다!
 
-
+<br>
 
 # 5.3 컴포넌트에 ref 달기
 
@@ -302,7 +297,7 @@ export default App;
 
 (실행 결과)
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6d8b9d49-4e7f-44e2-aa26-501570ff11be/_2020-11-14__3.22.51.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6d8b9d49-4e7f-44e2-aa26-501570ff11be/_2020-11-14__3.22.51.png)
+<img src="./Images/ch05/02.png" width="300px">
 
 ## 5.3.3 컴포넌트에 메서드 생성
 
@@ -324,7 +319,7 @@ import React, {Component} from 'react';
 class ScrollBox extends Component {
 
     scorllToBottom = () => {
-        **const {scrollHeight, clientHeight} = this.box; // ES6 비구조화 할당문**
+        const {scrollHeight, clientHeight} = this.box; // ES6 비구조화 할당문
         // 아래 코드와 동일
         // const scrollHeight = this.box.scrollHeight;
         // const clientHeight = this.box.clientHeight;
@@ -379,18 +374,17 @@ import ScrollBox from './ScrollBox.js';
 class App extends Component {
   render() {
     return (
-      **<div>
+      <div>
         <ScrollBox ref={(ref) => this.scrollBox=ref}/>
         <button onClick={() => this.scrollBox.scorllToBottom()}>맨밑으로</button>
-      </div>**
+      </div>
     );
   }
 }
 
 export default App;
 ```
-
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d34645d1-afeb-40f5-9de7-89fdba7d5795/_2020-11-14__3.38.29.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d34645d1-afeb-40f5-9de7-89fdba7d5795/_2020-11-14__3.38.29.png)
+<img src="./Images/ch05/03.png" width="300px">
 
  (주의)
 
@@ -400,14 +394,13 @@ export default App;
 
 따라서, 화살표 함수 문법을 사용해 아예 새로운 함수를 만들고 그 내부에서 `this.scrollBox.scrollToBottom`메서드 실행하면 오류 발생하지 않음
 
-
+<br>
 
 # 5.4 정리
 
-컴포넌트 내부에서 DOM에 직접 접근할 때 ref를 사용
+컴포넌트 내부에서 DOM에 직접 접근할 때 ref를 사용   
 
-(주의) 서로 다른 컴포넌트끼리 데이터 교류할 때 ref를 사용 금지!!!! → 앱 규모 커지면 유지보수 불가능
-
+(주의) 서로 다른 컴포넌트끼리 데이터 교류할 때 ref를 사용 금지!!!! → 앱 규모 커지면 유지보수 불가능   
 **컴포넌트끼리 데이터를 교류할 때**는 언제나 데이터를 **부모↔ 자식 흐름**으로 교류해야 함
 
 함수형 컴포넌트에서 ref를 사용하는 방법 → useRef라는 Hook 함수를 사용! (React.createRef와 유사) → 8장에서 자세히..
