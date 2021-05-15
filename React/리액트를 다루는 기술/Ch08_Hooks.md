@@ -39,7 +39,7 @@ const Counter = () => {
 
 export default Counter;
 ```
-<img src="./Images/ch06/01.png" >
+<img src="./Images/ch08/01.png" width="300px" >
 
 **`const [value, setValue] = useState(0);`**
 - 파라미터 : 상태의 기본 값을 넣어줌.  
@@ -91,7 +91,7 @@ const Info = () => {
 
 export default Info;
 ```
-<img src="./Images/ch06/02.png" >
+<img src="./Images/ch08/02.png" width="300px" >
 
 <br> 
 
@@ -155,7 +155,7 @@ useEffect(() => {
         console.log(name);
     }, [name]); // 두번째 인자: 배열 안에 검사하고자 하는 값
 ```
-<img src="./Images/ch06/03.png" >
+<img src="./Images/ch08/03.png" >
 
 
 ## 8.2.3 뒷정리 하기
@@ -201,7 +201,7 @@ const App = () => {
 
 export default App;
 ```
-<img src="./Images/ch06/04.png" width="800px">
+<img src="./Images/ch06/08.png" width="800px">
 버튼(보이기/숨기기) 누르면, 컴포넌트가 **나타날 때 콘솔에 effect**가 찍히고 컴포넌트가 **사라질 때 cleanup**이 찍힘           
 렌더링될 때마다 콘솔에 cleanup과 업데이트되기 직전 값이 찍힘     
 
@@ -294,7 +294,7 @@ const Counter = () => {
 
 export default Counter;
 ```
-<img src="./Images/ch06/05.png">
+<img src="./Images/ch08/05.png" width="300px" >
 
 ## 8.3.2 인풋 상태 관리하기
 useReducer로 Info 컴포넌트에서 인풋 상태 관리하기     
@@ -347,7 +347,7 @@ userRender에서의 **`action`은 그 어떤 값도 사용 가능**
 이 예제서는 이벤트 객체가 지니고 있는 **e.target 값 자체를 액션 값으로 사용**함       
 ⇒ 이런 식으로 input을 관리하면 인풋의 개수가 많아져도 **코드를 짧고 간단하게 유지** 가능
 
-<img src="./Images/ch06/06.png">
+<img src="./Images/ch08/06.png" width="300px" >
 
 <br> 
 
@@ -395,7 +395,7 @@ const Average = () => {
 
 export default Average;
 ```
-<img src="./Images/ch06/07.png" width="500px" />
+<img src="./Images/ch08/07.png" width="500px" />
 
 숫자는 3개 입력되어 있지만 로그는 3개 이상임    
 → 숫자를 등록할 때 뿐만 아니라 **input의 내용이 수정될 때도 getAverage함수가 호출**되는 것을 의미    
@@ -457,7 +457,7 @@ const Average = () => {
 
 export default Average;
 ```
-<img src="./Images/ch06/08.png" width="600px">         
+<img src="./Images/ch08/08.png" width="500px">         
 이제 배열이 바뀔 때만 getAverage 함수 호출됨!      
 
 <br>    
