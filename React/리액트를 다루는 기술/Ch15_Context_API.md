@@ -48,13 +48,25 @@ Context 안에 들어있는 Consumer 컴포넌트를 사용
 Context 값을 업데이트하려면??    
 Context의 `value`는 **상태 값** 외에도 **함수**가 올 수도 있음
 
+<br>
 
+# 15.4 Hooks 또는 static contextType 사용
 
+Context 값을 사용할 때 Consumer 외의 방법
 
+### `useContext` Hook 사용하기
+- 함수형 컴포넌트에서만 사용
+- Context 값 쉽게 조회 
 
+### `static contextType` 사용하기
+- 클래스형 컴포넌트에서 사용
+- 단점: 한 클래스에 하나의 Context만 사용 가능
 
+<br>
 
-
+# 정리 
+Context API를 통해 상태 교류가 쉬워짐    
+전역적으로 사용되는 상태가 존재하며, 컴포넌트의 개수가 많다면 Context API 사용하는 것이 유리함!
 
 
 
