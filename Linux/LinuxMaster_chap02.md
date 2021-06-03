@@ -4,6 +4,27 @@
 
 # 1. 파일 시스템 관련 명령어
 
+### /etc/fstab 파일
+- 파일 시스템에 대한 다양한 정보를 담고 있는 파일
+- 부팅 시에 마운트할 파티션 정보가 기록되어 있는 파일
+
+#### fstab 필드 구성
+- 첫 번째: 장치명 → (최근 배포판) 볼륨 라벨 or UUID
+- 두 번째: 마운트될 디렉터리
+- 세 번째: 파일 시스템의 유형
+  - ex) ex4, swap, nfc .. 
+- 네 번째: 마운트될 때의 옵션
+  - ex) defaults, usrquota, grpquota, acl .. 
+- 다섯 번째: dump 명령을 통한 백업시 레벨 덤프 사용 주기
+  - 0: dump 사용 x
+  - 1: 매일 수행
+  - 2: 이틀에 한 번 수행  
+- 여섯 번째: 부팅 시 파일 시스템을 점검하는 fsck 명령의 순서
+
+
+
+
+
 
 
 
@@ -20,6 +41,13 @@
 `history [숫자값]` : 마지막 [숫자값] 만큼의 명령어 목록 출력 (복수)        
 `!!` : 가장 마지막에 실행한 명령 재실행 (단수)    
 `!100` : 히스토리 목록 번호 중 100번째에 해당하는 명령 실행    
+
+
+
+
+
+
+
 
 
 <br>
@@ -69,6 +97,15 @@ no | 이름 | 의미
 - `/etc/crontab`: root 권한으로 디렉터리에 등록해서 주기적으로 수행
 - `/var/spool/cron`: 일반 사용자가 등록한 cron 작업 관련 파일이 저장되는 디렉터리
 
+
+
+
+
+
+
+
+
+
 <br> 
 
 # 4. 에디터
@@ -100,5 +137,77 @@ no | 이름 | 의미
 
 
 
+
+
+
+
+
+
+<br> 
+
+# 5. 소프트웨어 설치
+
+### 소스 (Source) 설치법
+> 압축 풀기 → 디렉터리 이동 → configure → make → make install
+- configure 단계
+  - 소스 프로그램의 환경 설정 스크립트
+  - Makefile이 생성됨
+
+### rpm
+
+### yum
+
+### dpkg
+
+### apt-get
+- 패키지 관리를 쉽게하는 명령행 기반의 유틸리티
+- 의존성과 충돌성을 쉽게 해결
+- APT (Advanced Pakaging Tool) 라이브러리
+- GUI 기반
+  - synaptic: APT 패키지 관리 시스템 → GTK+ 기반의 GUI 도구
+  - aptitude 
+
+
+
+
+
+
+
+
+
+<br>
+
+# 6. 장치 설정
+
+### 프린터
+- **`LPRng`**
+- **`CUPS`**
+  - 애플이 개발한 오픈 소스 프린팅 시스템
+  - **HTTP** 기반의 **IPP**(Internet Printing Protocol) 사용
+  - **SMB** 프로토콜 부분적 지원
+  - BSD와 System V 계열 명령어 사용 가능  
+
+#### 네트워크 프린터 설정
+- AppSocekt/HP JetDirect : 프린터가 컴퓨터에 연결되어 있지 않고, 직접 네트워크에 연결된 경우
+- Internet Printing Protocol (**ipp**)
+- Internet Printing Protocol (**https**)
+- LPD/LPR Host or Printer (**LPD**)
+- Wndows Printer via SAMBA (**SMB**)
+
+### 사운드카드
+- **`ALSA`**
+  - 사운드 카드용 장치 드라이버 제공하기 위한 리눅스 커널 요소
+  - 1998, Jaroslav Kysela에 의해 시작
+  - GPL 및 LGPL 라이선스 기반    
+- **`OSS`**
+  - 사운드를 만들고 캡처하는 인터페이스
+  - 1992, Hannu Savolainen에 의해 개발
+  - Linux GPL 라이선스 → BSD 라이선스 기반 소스 공개
+
+### 스캐너
+- **`SANE`**
+- **`XSNAE`**
+  - X-Window 기반
+  - GTK+ 라이브러리  
 
 
