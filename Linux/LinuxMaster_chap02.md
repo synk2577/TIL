@@ -12,11 +12,21 @@ w |파일 내용을 수정할 수 있음|디렉터리 내부의 파일을 생성
 x |실행 파일을 실행시킬 수 있음|디렉터리 내부에 **접근 가능**
 
 ### chown
-소유권 변경 명령어    
+소유권 변경 명령어      
+`/etc/passwd`: 소유권 변경시 참조하는 파일
+
 ex)    
 `chown ihduser.admin lin.txt`     
 `chown ihduser:admin lin.txt`     
 (:)을 (.)으로 대체 가능
+
+### 특수 권한
+특수 권한이 설정된 파일
+- `/bin/su`
+- `/bin/mount`
+- `/usr/bin/passwd`
+
+Set-UID, Set-GID는 보안에 취약함!
 
 ### 리눅스 파일 시스템
 저널링 파일 시스템: **`ext3`**, **`ext4`**, **`Reiserfs`**, **`XFS`**, **`JFS`**      
@@ -66,7 +76,8 @@ bash | 1989 | 브라이언 폭스 <br>본 셸 기반 <br>리눅스 표준 셸
 2. **`echo $SHELL`** 명령
 3. **`grep 본인계정명 /etc/passwd`** 명령    
 
-※ /etc/passwd : 사용자의 로그인 셸이 기록되어 있음 
+※ /etc/passwd : 사용자의 로그인 시에 부여되는 셸 정보 기록
+※ /etc/shadow : 사용자의 패스워드 관련 정보 기록
 
 #### vs. 변경 간능한 셸의 확인 (여러 개 출력)
 1. **`chsh -l`** 명령
@@ -165,7 +176,9 @@ ex) `kill -9 22{1,2,3}9` : 프로세스 식별번호가 2219, 2229, 2239인 프�
 
 #### 우선순위 변경 가능한 명령어
 - nice
+  - `# nice [option] 프로세스명`
 - renice
+  - `# renice [option] NI값 PID` 
 - **top**
 
 ### cron
@@ -190,9 +203,9 @@ ex) `kill -9 22{1,2,3}9` : 프로세스 식별번호가 2219, 2229, 2239인 프�
 각 에디터에서 지원하는 기능 
 종류 | 특징
 ----| ----
-**PICO** | Aboil Kasar가 개발한 유닉스 기반의 텍스트 에디터 <br> 최근 리눅스 배포판에는 `nano`가 제공 <br> 지원 기능: 단락 정의, 맞춤법 검사, 복사 및 붙여넣기 
-**emacs** | 리처드 스톨만이 매크로 기능이 있는 텍스트 교정 및 편집기로 개발 <br>GNU emacs: 최근 리눅스 배포판에 사용됨, 'emacs LISP'라 하는 LISP에 기반을 둔 환경 설정 언어로 처음부터 다시 만듦 <br> 강력한 질의 치환 기능 - `[Esc] 키` ->  `% 키` -> 화면 하단 `Query replace`: 프롬프트  
-**vim** | 현재 리눅스 배포판에 사용되는 편집기로 오리지날 버전은 `vi`<br> 옵션 `-r` : 손상된 파일 복구할 때 사용 <br> 지원 기능: 히스토리 기능, 문법 검사 기능, 다중 되돌리기 기능 
+**PICO** | **Aboil Kasar**가 개발한 유닉스 기반의 텍스트 에디터 <br> 최근 리눅스 배포판에는 `nano`가 제공 <br> 지원 기능: 단락 정의, 맞춤법 검사, 복사 및 붙여넣기 
+**emacs** | **리처드 스톨만**이 매크로 기능이 있는 텍스트 교정 및 편집기로 개발 <br>GNU emacs: 최근 리눅스 배포판에 사용됨, 'emacs LISP'라 하는 LISP에 기반을 둔 환경 설정 언어로 처음부터 다시 만듦 <br> 강력한 질의 치환 기능 - `[Esc] 키` ->  `% 키` -> 화면 하단 `Query replace`: 프롬프트  
+**vim** | **브람 무레나르(Bram Moolenaar)** 가 만듦<br>현재 리눅스 배포판에 사용되는 편집기로 오리지날 버전은 `vi`<br> 옵션 `-r` : 손상된 파일 복구할 때 사용 <br> 지원 기능: 히스토리 기능, 문법 검사 기능, 다중 되돌리기 기능 
 
 #### PICO & emacs 커서 이동 단축키 조합
 조합 | 설명
@@ -286,7 +299,8 @@ yum 명령의 저장소 관련 파일들이 위치하는 디렉터리
 
 ### apt-get
 - 패키지 관리를 쉽게하는 명령행 기반의 유틸리티
-- 의존성과 충돌성을 쉽게 해결
+- `/etc/apt/sources.list` 파일에 패키지 관련 정보를 관리
+  - → 의존성과 충돌성을 쉽게 해결
 - APT (Advanced Pakaging Tool) 라이브러리
 - GUI 기반
   - synaptic: APT 패키지 관리 시스템 → GTK+ 기반의 GUI 도구
@@ -323,6 +337,9 @@ atp-get |`apt-get [option] [command] [패키지명]` | `remove`
 - Internet Printing Protocol (**https**)
 - LPD/LPR Host or Printer (**LPD**)
 - Wndows Printer via SAMBA (**SMB**)
+
+#### `system-config-printer` 명령어
+CentOS 6버전에서 사용하는 X 윈도 기반의 프린터 설정 명령
 
 ### 사운드카드
 - **`ALSA`**
