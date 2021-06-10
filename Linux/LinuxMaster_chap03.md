@@ -5,7 +5,7 @@
 # 1. X 윈도
 
 **MIT** : X 윈도 서버로 사용되는 X.org에 적용된 라이선스
-
+X11: 현재 배포되고 있는 x.org의 버전
 
 ### X 윈도의 구조
 클라이언트/서버 구조    
@@ -38,7 +38,7 @@ ex)
   - 초기버전: nautilus 파일관리자 이용
   - GNOME2: metacity 윈도 매니저
   - GNOME3: Mutter 윈도 매니저
-  - 주요 프로그램: nautius, GIMP, evince, gedit, eog
+  - 주요 프로그램: nautilus, GIMP, evince, gedit, eog, totem, evolution
 - **`Xfce`**
 - **`LXDE`**
  
@@ -76,10 +76,33 @@ X 접근하거(authority) 파일 관련 도구
   - konqueror
 - 문서 및 이미지 뷰어 프로그램
   - Okular    
+- LibreOffice 패키지
+  - LibreOffice Writer 
+  - LibreOffice Impress
+  - LibreOffice Calc
+  - LibreOffice Draw
+  - 명령행 실행: `oowriter`, `ooimpress`, `oocalc`, `oodraw`
 
 <br>
 
 # 2. 인터넷 활용
+
+### LAN
+- 이더넷과 CSMA/CD
+- 토큰링
+- FDDI
+
+### MAN
+도시권 통신망으로 LAN과 WAN의 중간 형태
+- DQDB 광케이블
+
+### WAN
+국가, 대륙 등과 같은 넓은 지역을 연결하는 네트워크    
+- 전용회선
+- 교환회선
+  - 회선 교환
+  - 패킷 교환
+  - 셀 릴레이 
 
 ### 네트워크 장비
 #### LAN 구성 장비
@@ -108,6 +131,17 @@ X 접근하거(authority) 파일 관련 도구
 
 #### 3-way handshaking 수행 순서
 `SYN` → `ACK/SYN` → `ACK`
+
+### OSI 7계층
+- ⑦ 응용 계층 (data) 
+- ⑥ 표현 계층 (data)
+- ⑤ 세션 계층 (data)
+  - `SSL` 
+- ④ 전송 계층 (segment)
+- ③ 네트워크 계층 (packet)
+  - `IP`, `ICMP`, `ARP` ... 
+- ② 데이터 링크 계층 (frame)
+- ① 물리 계층 (bit)
 
 ### 프로토콜 번호
 - 20: FTP-data 포트
@@ -191,13 +225,14 @@ IPv4의 주소 고갈 문제를 해결하기 위해 제안된 차세대 인터�
   - `ip addr show`: IP 주소 정보 출력 
   
 
-
+※ **DHCP 서버**: 자동으로 ip 주소 할당
 
 
 <br>
 
 # 3. 응용 분야 
 ### 리눅스 클러스터
+※ **채널본딩**: 호스트 컴퓨터에 2개 이상의 네트워크 인터페이스를 장착한 후에 안정성, 전송속도를 높이기 위해 구성하는 기술
 
 ### 임베디드 시스템 
 
@@ -206,6 +241,7 @@ IPv4의 주소 고갈 문제를 해결하기 위해 제안된 차세대 인터�
 #### 서버 가상화
 - ZEN: 커널이 수정된 게스트 운영체제를 통해 물리적 서버 대비하여 **최대 98%의 성능**을 나타내는 **CPU 반가상화**
 - KVM
+  - KVM 기반에 상용화된 제품은 레드의 **RHEV** 
 - 버추얼박스
 - 도커: 서버 운영에 필요한 프로그램과 라이브러리만 **이미지로** 만들어서 프로세스처럼 동작시키는 **경량화된 가상화 방식**   
 
