@@ -39,7 +39,17 @@ Set-UID, Set-GID는 보안에 취약함!
 
 ### 리눅스 파일 시스템
 저널링 파일 시스템: **`ext3`**, **`ext4`**, **`Reiserfs`**, **`XFS`**, **`JFS`**      
-**`sysv`**: SystemV/Coherent 파일시스템을 리눅스에서 구현
+**`sysv`**: SystemV/Coherent 파일시스템을 리눅스에서 구현      
+**`smb`**: 네트워크 파일시스템인 SMB 프로토콜 구현한 파일 시스템, 최근에는 CIFS로 확장     
+
+### mount
+보조기억장치나 파일 시스템이 다른 디스크를 /의 하위 디렉터리로 연결해 사용하게 함     
+`# mount [option] [device] [directory]`    
+- `-t fs_type` 옵션
+  - `smbfs`: 삼바 파일시스템을 마운트할 때 지정   
+- `-o` 옵션 
+  - `remount`: 해당 파티션 다시 마운트
+  - `loop`: loop 디바이스로 마운트할 때 씀, **iso 파일(CD-ROM이미지) only**
 
 ### fdisk
 디스크 파티션 확인하고 추가/삭제하는 명령    
@@ -148,7 +158,7 @@ ex) `$ chsh -s /bin/csh` : 사용자가 로그인 셸을 변경함
 - **PATH** 변수에 환경변수 추가하기: `$ PATH=$PATH:$HOME/data` 
 
 - `env`: 현재 설정된 **전체 환경변수의 값**을 확인할 때 사용하는 명령어
-- `set`: 셸에서 선언된 **셸 변수 전부**를 확인할 때 사용하는 명령어
+- `set`: 셸에서 선언된 **셸 변수 전부**를 확인할 때 사용하는 명령어 (+ 환경변수 포함한 셸 변수 전부를 출력)
 
 ### history 명령어
 `history`: 히스토리에 저장된 명령어 목록 출력    
@@ -325,6 +335,8 @@ ex) `*/30 * * * * /etc/backup.sh`: 백업스크립트 30분 주기로 실행
 - configure 단계
   - 소스 프로그램의 환경 설정 스크립트
   - Makefile이 생성됨
+#### cmake 기반 프로그램 설치 순서
+> cmake → make install    (2단계)
 
 #### `make clean` 명령어
 소스 설치 과정에서 configure 작업으로 생성된 다양한 파일을 제거할 때 사용
@@ -375,6 +387,7 @@ yum은 `repository`에 관련 패키지들을 모아두고, 네트워크를 통�
 #### yum의 command
 - **`search [문자열..]`**: 문자열이 포함된 패키지를 찾아줌
 - **`install [패키지명]`**: 패키지 설치시 사용
+- **`info [패키지명]`**: 패키지에 대한 정보 출력 
 
 #### /etc/yum.repos.d
 yum 명령의 저장소 관련 파일들이 위치하는 디렉터리
@@ -426,6 +439,10 @@ atp-get |`apt-get [option] [command] [패키지명]` | `remove`
   - **SMB** 프로토콜 부분적 지원
   - BSD와 System V 계열 명령어 사용 가능
   - `http://localhost:631` : 네트워크를 통해 프린터를 설정할 때 접속 포트번호  
+
+※ 리눅스 시스템에 프린터 직접 연결; 관련 파일 자동 생성
+※ 병렬 포트 연결: `/dev/lp0` 파일
+※ USB 포트 연결: `/dev/usb/lp0` 파일
 
 #### 네트워크 프린터 설정
 - AppSocekt/HP JetDirect : 프린터가 컴퓨터에 연결되어 있지 않고, 직접 네트워크에 연결된 경우
