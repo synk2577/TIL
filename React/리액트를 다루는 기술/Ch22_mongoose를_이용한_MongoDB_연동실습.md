@@ -504,12 +504,184 @@ export const list = async (ctx) => {
 
 # 22.10 페이지네이션 구현
 
+블로그 포스트 목록 조회시 
+- 한 페이지에 10~20개 게시물이 적당
+- 포스트 내용의 처음 200자 정도만 보이도록 함
+
+→ list API에 **`페이지네이션`** 기능을 구현!!
+
+### 가짜 데이터 생성하기 
 
 
 
+### 포스트를 역순으로 불러오기
+블로그 포스트의 경우, **가장 최근에 작성된 포스트부터** 보여주는 것이 좋음        
+→ **`작성된 역순`**으로 보여주어야 함!!
+
+list API에서 `sort()` 구문을 넣고, `exec()` 작성
+
+#### `sort()` 파라미터
+`{ key : 1 }`       
+- `1`: 오름차순
+- `-1`: 내림차순
+
+src/api/posts/posts.ctrl.js - list
+```javascript
+// GET /api/posts - 데이터 조회
+export const list = async (ctx) => {
+  try {
+    const posts = await Post.find()
+      .sort({
+        _id: -1, // 내림차순 정렬 (최신 포스팅된 블로그부터 보여줌)
+      })
+      .exec(); // find().exec(): 서버에 쿼리 요청
+    ctx.body = posts;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+```
+
+### 보이는 개수 제한
+
+#### `limit()`
+- 한 번에 보이는 개수를 제한     
+- 파라미터: `제한할 숫자`
+
+src/api/posts/posts.ctrl.js - list
+```javascript
+// GET /api/posts - 데이터 조회
+export const list = async (ctx) => {
+  try {
+    const posts = await Post.find()
+      .sort({
+        _id: -1, // 내림차순 정렬 (최신 포스팅된 블로그부터 보여줌)
+      })
+      .limit(10) // 보이는 개수 제한
+      .exec(); // find().exec(): 서버에 쿼리 요청
+    ctx.body = posts;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+}; 
+```
 
 
+### 페이지 기능 구현
 
+#### `skip()`
+'넘긴다'는 의미로, 파라미터에 10을 넣어주면 처음 10개를 제외하고 그 다음 데이터를 불러오고, 파라미터에 20을 넣어주면 처음 20개를 제외하고 데이터를 불러옴        
+- 파라미터: **`(page-1) * 10`**
+- page값은 query에서 받아오도록 설정 (값이 없으면 1로 간주)
+
+src/api/posts/posts.ctrl.js - list
+```javascript
+// GET /api/posts - 데이터 조회
+export const list = async (ctx) => {
+  // 페이지네이션 구현
+  // query는 문자열 -> 숫자로 반환
+  // 값이 주어지지 않으면 1로 간주
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const posts = await Post.find()
+      .sort({
+        _id: -1, // 내림차순 정렬 (최신 포스팅된 블로그부터 보여줌)
+      })
+      .limit(10) // 보이는 개수 제한
+      .skip((page - 1) * 10) // 페이지 기능
+      .exec(); // find().exec(): 서버에 쿼리 요청
+    ctx.body = posts;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+```
+
+### 마지막 페이지 번호 알려주기
+클라이언트의 편의를 위해 마지막 페이지 번호를 알려주기      
+- 응답 형식을 바꿔 새로운 필드 설정      
+- Response 헤더 중 Link 설정        
+- **커스텀 헤더를 설정**      
+
+src/api/posts/posts.ctrl.js - list
+```javascript
+// GET /api/posts - 데이터 조회
+export const list = async (ctx) => {
+  // 페이지네이션 구현
+  // query는 문자열 -> 숫자로 반환
+  // 값이 주어지지 않으면 1로 간주
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const posts = await Post.find()
+      .sort({
+        _id: -1, // 내림차순 정렬 (최신 포스팅된 블로그부터 보여줌)
+      })
+      .limit(10) // 보이는 개수 제한
+      .skip((page - 1) * 10) // 페이지 기능
+      .exec(); // find().exec(): 서버에 쿼리 요청
+    const postCount = await Post.countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
+    ctx.body = posts;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+```            
+
+### 내용 길이 제한
+`body`의 길이가 200자 이상이면 뒤에 `...`을 붙여 문자열을 자르는 기능 추가       
+
+`find()`로 조회한 데이터는 mongoose 문서 **인스턴스 형태**이므로 `toJSON()` 함수로 **JSON 형태**로 변형            
+(단, `lean()` 함수를 사용하면 **처음부터 JSON 형태로 조회** 가능함)        
+    
+src/api/posts/posts.ctrl.js - list
+```javascript
+// GET /api/posts - 데이터 조회
+export const list = async (ctx) => {
+  // 페이지네이션 구현
+  // query는 문자열 -> 숫자로 반환
+  // 값이 주어지지 않으면 1로 간주
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const posts = await Post.find()
+      .sort({
+        _id: -1, // 내림차순 정렬 (최신 포스팅된 블로그부터 보여줌)
+      })
+      .limit(10) // 보이는 개수 제한
+      .skip((page - 1) * 10) // 페이지 기능
+      .lean() // 내용 길이 제한
+      .exec(); // find().exec(): 서버에 쿼리 요청
+    const postCount = await Post.countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
+    ctx.body = posts.map((post) => ({
+      ...post,
+      body:
+        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+    }));
+    ctx.body = posts;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+```
 
 
 
@@ -517,8 +689,10 @@ export const list = async (ctx) => {
 
 # 22.11 정리
 
+MongoDB는 더 다양하고 복잡한 쿼리 설정도 가능함!     
 
-
+**`백엔드`**는 여러 조건에 따라 **클라이언트에서 전달받은 데이터를 등록/조회/수정**하는 것!!       
+현재 프로젝트에서는 한 종류의 데이터 모델과 REST API만 있지만, 규모에 따라 **더 많은 종류의 모델과 API 관리**도 가능함!!       
 
 
 
