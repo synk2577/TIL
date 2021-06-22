@@ -183,10 +183,129 @@ export default api;
 
 ### 회원가입 구현하기 
 
+src/api/auth/auth.ctrl.js 
+```javascript
+import Joi from '@hapi/joi';
+import User from '../../models/user';
+
+// POST /api/auth/register
+// {
+//     username: 'velopert',
+//     password: 'mypass123'
+// }
+export const register = async (ctx) => {
+  // Request body 검증하기
+  const schema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(20).required(),
+    password: Joi.string().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
+  const { username, password } = ctx.request.body;
+  try {
+    // username이 이미 존재하는지 확인 - 중복 계정 확인
+    const exists = await User.findByUsername(username);
+    if (exists) {
+      ctx.status = 409; // Conflict
+      return;
+    }
+
+    const user = new User({
+      username,
+    });
+
+    await user.setPassword(password); // 비밀번호 설정
+    await user.save(); // 데이터베이스에 저장
+
+    // 응답할 데이터에서 hasedPassword 필드 제거
+    ctx.body = user.serialize(); // src/models/user.js - serialize() 인스턴스 함수
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+export const login = async (ctx) => {
+  // 로그인
+};
+
+export const check = async (ctx) => {
+  // 로그인 상태 확인
+};
+
+export const logout = async (ctx) => {
+  // 로그아웃
+};
+```
+> `findByUsername()` 스태틱 메서드: 중복 계정이 생성되지 않도록 기존에 해당 username 존재 여부 확인      
+> `setPassword()` 인스턴스 함수: 비밀번호 설정      
+> `serialize()` 인스턴스 함수: user.js 모델 파일에 작성된 함수로 hasedPassword 필드가 응답되지 않도록 JSON으로 변환한 후 delete를 통해 해당필드를 지우는 과정이 자주 필요하여 작성됨      
+
+POST http://localhost:4000/api/auth/register 요청시                
+```json
+{
+    "username": "welopert",
+    "password": "mypass123"
+}
+```
+
+`_id`, `username`, `__v` 응답이 나타남     
+
+중복된 username으로 요청 보낼시 Conflict 에러 발생 확인!
+
+
 ### 로그인 구현하기 
 
+src/api/auth/auth.ctrl.js - login
+```javascript
+// 로그인
+// POST /api/auth/login
+// {
+//   usernmae: 'verlopert',
+//   password: 'mypass123'
+// }
+export const login = async (ctx) => {
+  const { username, password } = ctx.request.body;
 
+  // username, password가 없으면 에러 처리
+  if (!username || !password) {
+    ctx.status = 401; // Unauthorized
+    return;
+  }
 
+  try {
+    const user = await User.findByUsername(username); // 사용자 데이터를 찾음
+    // 계정이 존재하지 않으면 에러 처리
+    if (!user) {
+      ctx.status = 401;
+      return;
+    }
+
+    const valid = await user.checkPassword(password); // 비밀번호 검사 
+    // 잘못된 비밀번호
+    if (!valid) {
+      ctx.status = 401;
+      return;
+    }
+    ctx.body = user.serialize(); // 성공시 계정 정보를 응답 
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+```
+> `username`, `password` 값이 전달되지 않으면, 에러 처리     
+> `findByUsername()`: 사용자 데이터를 찾고, 사용자 데이터가 없다면 에러 처리
+> `checkPassword()`: 계정이 유효한 경우 비밀번호 검사하고 성공시 계정 정보를 응답
+
+회원가입에서 생성했던 계정 정보로 로그인 API 요청
+<img width="875" alt="스크린샷 2021-06-22 오후 5 56 47" src="https://user-images.githubusercontent.com/55572222/122895803-698da880-d383-11eb-9828-0aa93a08db92.png">
+
+틀린 비밀번호로 로그인 API 요청 → `401 Unauthorized` 에러 발생!
+<img width="883" alt="스크린샷 2021-06-22 오후 5 57 12" src="https://user-images.githubusercontent.com/55572222/122895729-5a0e5f80-d383-11eb-97da-c70163d38339.png">
 
 
 
