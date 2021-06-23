@@ -312,14 +312,387 @@ export const login = async (ctx) => {
 <br> 
 
 # 23.4 토큰 발급 및 검증하기
+**서버에서 토큰을 발급**해 클라이언트에서 사용자 로그인 정보를 가지고 있도록 함!!
+
+`yarn add jsonwebtoken`: JWT 토큰을 만들기 위한 모듈
+
+### 비밀키 설정하기
+
+`openssl rand -hex 64`: 랜덤 문자열을 만들어줌
+→ `.env` 파일에서 `JWT_SECRET`값으로 설정
+
+비밀키는 JWT 토큰의 서명을 만드는 과정에서 사용되며, 외부 공개는 절대 안됨!
+
+### 토큰 발급하기
+
+### 1. 브라우저의 `localStorage` or `sessionStorage에` 담아서 사용
+
+- 장점
+    - 사용이 편리
+    - 구현이 쉬움
+- 단점
+    - XXS(Cross Site Scripting) 공격에 취약 - 페이지에 악성 스크립트를 삽입해 토큰 탈취
+
+### 2. 브라우저 `쿠키`에 담아서 사용 ✔
+
+- 장점
+    - `httpOnly` 속성 활성화시 XXS 공격으로부터 안전
+- 단점
+    - CSRF (Cross Site Request Forgery) 공격에 취약 - 토큰을 쿠키에 담으면 사용자가 서버로 요청할 때마다 무조컨 토큰이 함께 전달됨
+    → 사용자가 모르게 원하지 않는 API 요청을 하게 만듦
+    - CSRF 토큰 사용 및 Referer 검증 등의 방식으로 제대로 막을 수 있음
+
+사용자 토큰을 쿠키에 담아서 사용!! - register와 login 함수 수정
+src/api/auth/auth.ctrl.js
+
+```javascript
+// 회원가입
+export const register = async (ctx) => {
+  (...)
+
+    // 응답할 데이터에서 hasedPassword 필드 제거
+    ctx.body = user.serialize(); // src/models/user.js - serialize() 인스턴스 함수
+
+    // 사용자 토큰을 쿠키에 담아서 사용
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+      httpOnly: true,
+    });
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+// 로그인
+export const login = async (ctx) => {
+  (..)
+    ctx.body = user.serialize();
+
+    // 사용자 토큰을 쿠키에 담아서 사용
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+      httpOnly: true,
+    });
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+```
+
+Postman으로 로그인 요청 후, Headers의 Set-Cookit 헤더 확인
+<img width="792" alt="스크린샷 2021-06-23 오전 1 57 29" src="[https://user-images.githubusercontent.com/55572222/122968318-5fd96480-d3c6-11eb-943d-8cd22893e249.png](https://user-images.githubusercontent.com/55572222/122968318-5fd96480-d3c6-11eb-943d-8cd22893e249.png)">
+
+### 토큰 검증하기
+
+사용자의 토큰 확인 후, 검증하는 작업 → `미들웨어`로 처리
+
+src/lib/jwtMiddleware.js - lib 디렉터리에 **미들웨어 생성**
+```javascript
+import jwt, { decode } from 'jsonwebtoken';
+
+const jwtMiddleware = (ctx, next) => {
+  const token = ctx.cookies.get('access_token');
+  if (!token) return next(); // 토큰 없음
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
+    return next();
+  } catch (e) {
+    // 토큰 검증 실패
+    return next();
+  }
+};
+
+export default jwtMiddleware;
+```
+
+src/main.js - main.js에서 **app에 미들웨어 적용**하기
+```javascript
+require('dotenv').config();
+import Koa from 'koa';
+import Router from 'koa-router';
+import bodyParser from 'koa-bodyparser';
+import mongoose from 'mongoose';
+
+import api from './api';
+import jwtMiddleware from './lib/jwtMiddleware';
+import createFakeData from './createFakeData';
+
+// 비구조화 할당을 통하여 process.env 내부 값에 대한 레퍼런스 만들기
+const { PORT, MONGO_URI } = process.env;
+
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
+    createFakeData();
+  })
+  .catch((e) => {
+    console.error(e);
+  });
+
+const app = new Koa();
+const router = new Router();
+
+// 라우터 설정
+router.use('/api', api.routes()); // api 라우트 적용
+
+// 라우터 적용 전에 bodyParser 적용
+app.use(bodyParser());
+app.use(jwtMiddleware); // router 미들웨어보다 먼저 적용되어야 함
+
+// app 인스턴스에 라우터 적용
+app.use(router.routes()).use(router.allowedMethods());
+
+// PORT 가 지정되어있지 않다면 4000 을 사용
+const port = PORT || 4000;
+app.listen(port, () => {
+  console.log('Listening to port %d', port);
+});
+```
+> app에 router 미들웨어 적용하기 전에 이루어져야함       
 
 
+Postman에서 http://localhost:4000/api/auth/check 경로에 GET 요청시 터미널에 토큰 해석 결과 뜸      
+![스크린샷 2021-06-23 오후 5 03 53](https://user-images.githubusercontent.com/55572222/123059700-ff3d3c80-d444-11eb-9c58-4d2efe6016cb.png)
+        
+ctx의 state에 넣어서 **토큰이 해석된 결과를 미들웨어에서 사용 가능하도록** 함!      
+src/lib/jwtMiddleware.js    
+```javascript
+import jwt, { decode } from 'jsonwebtoken';
+
+const jwtMiddleware = (ctx, next) => {
+  const token = ctx.cookies.get('access_token');
+  if (!token) return next(); // 토큰 없음
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // ctx의 state에 토큰이 해석된 결과를 미들웨어 사용 가능하도록 함
+    ctx.state.user = {
+      _id: decode._id,
+      username: decoded.username,
+    };
+
+    console.log(decoded);
+    return next();
+  } catch (e) {
+    // 토큰 검증 실패
+    return next();
+  }
+};
+
+export default jwtMiddleware;
+```
+
+src/api/auth/auth.ctrl.js - check
+```javascript
+// GET /api/auth/check
+// 로그인 상태 확인
+export const check = async (ctx) => {
+  const { user } = ctx.state;
+  if (!user) {
+    // 로그인 중 아님
+    ctx.status = 401; // Unauthorized
+    return;
+  }
+  ctx.body = user;
+};
+```
+
+Postman으로 GET 요청 (http://localhost:4000/api/auth/check) - 서버 응답 확인          
+
+
+### 토큰 재발급하기
+jwtMiddleware로 토큰이 해석되고 터미널에 해석된 결과가 출력됨
+
+![스크린샷 2021-06-23 오후 5 03 53](https://user-images.githubusercontent.com/55572222/123059700-ff3d3c80-d444-11eb-9c58-4d2efe6016cb.png)        
+- `iat`: 토큰이 언제 만들어졌는지
+- `exp`: 토큰이 언제 만료되는지 
+
+#### `exp`로 표현된 날짜가 3.5일 미만인 경우, 토큰을 재발급하는 기능 구현하기
+
+src/lib/jwtMiddleware.js
+```javascript
+import jwt, { decode } from 'jsonwebtoken';
+import User from '../models/user';
+
+const jwtMiddleware = async (ctx, next) => {
+  const token = ctx.cookies.get('access_token');
+  if (!token) return next(); // 토큰 없음
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // ctx의 state에 토큰이 해석된 결과를 미들웨어 사용 가능하도록 함
+    ctx.state.user = {
+      _id: decode._id,
+      username: decoded.username,
+    };
+
+    console.log(decoded);
+
+    // 토큰의 남은 유효 기간이 3.5일 미만이면 재발급
+    const now = Math.floor(Date.now() / 1000);
+    if (decode.exp - now < 60 * 60 * 24 * 3.5) {
+      const user = await User.findById(decode._id);
+      const token = user.generateToken();
+      ctx.cookies.set('access_token', token, {
+        maxAge: 1000 * 60 * 60 * 24 * 7, //7dlf
+        httpOnly: true,
+      });
+    }
+
+    return next();
+  } catch (e) {
+    // 토큰 검증 실패
+    return next();
+  }
+};
+
+export default jwtMiddleware;
+```
+> 토큰 재발급 확인     
+> user 모델 파일의 generateToken 함수에서 토큰 유효 기간을 3일로 설정       
+> → login API 요청하고 check API 요청     
+> → Headers에서 새 토큰이 Set-Cookie를 통해 설정됨      
+
+
+
+### 로그아웃 기능 구현하기
+쿠키를 지워줘야 함      
+
+src/api/auth/auth.ctrl.js - logout
+```javascript
+// 로그아웃
+// POST /api/auth/logout
+export const logout = async (ctx) => {
+  // 쿠키 지우기
+  ctx.cookies.set('access_token');
+  ctx.status = 204; // No Content
+};
+```
+
+Postman에서 Post (http://localhost:4000/api/auth/logout) 호출       
+<img width="1084" alt="스크린샷 2021-06-23 오후 6 00 49" src="https://user-images.githubusercontent.com/55572222/123068550-f3557880-d44c-11eb-825b-21475366cd3c.png">      
+Cookie 헤더에서 `access_token`이 비워짐     
 
 
 
 <br> 
 
 # 23.5 posts API에 회원 인증 시스템 도입하기
+
+기존 posts API에 회원 인증 시스템 추가하기        
+- 새 포스트는 로그인한 유저만 작성 가능
+- 포스트 삭제/수정은 작성자만 가능        
+
+각 함수를 직접 수정해서 기능 구현도 가능하지만, 해당 프로젝트에서는 `미들웨어`를 만들어 관리!      
+
+### 스키마 수정하기
+
+**각 포스트를 어떤 사용자가 작성했는지** 알아야 하기 때문에 기존의 Post 스키마를 수정함 → 스키마에 **`사용자 정보`**를 넣어줌!!       
+
+- 관계형 데이터베이스: 데이터의 id만 관계 있는 데이터에 넣어줌 
+- MongoDB: 필요한 데이터를 통째로 집어넣음        
+
+#### Post 스키마 안에 사용자의 id와 username을 넣어야 함
+
+src/models/posts.js - user 정보 추가
+```javascript
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
+
+const PostSchema = new Schema({
+  title: String,
+  body: String,
+  tags: [String], // 문자열로 이루어진 배열
+  publishedDate: {
+    type: Date,
+    default: Date.now, // 현재 날짜를 기본값
+  },
+  // 사용자 정보 추가
+  user: {
+    _id: mongoose.Types.ObjectId,
+    usernmae: String,
+  }
+});
+
+const Post = mongoose.model('Post', PostSchema); // 스키마 이름, 스키마 객체
+export default Post;
+```
+
+### posts 컬렉션 비우기
+post 데이터에는 사용자 정보가 필요하므로 이전에 생성한 데이터들이 유효하지 않으므로 삭제! → MongoDB Compass의 오른쪽 휴지통 아이콘 
+
+
+
+
+### 로그인했을 때만 API를 사용할 수 있게 하기
+
+**`checkLoggedIn 미들웨어`**        
+로그인해야만 글쓰기/수정/삭제 가능하도록 수정           
+
+src/lib/checkLoggedIn.js
+```javascript
+const checkedLoggedIn = (ctx, next) => {
+  if (!ctx.state.user) {
+    ctx.status = 401; // Unauthorized - 로그인 상태가 아닌경우
+    return;
+  }
+  return next(); // 로그인 상태라면 그 다음 미들웨어 실행
+};
+
+export default checkedLoggedIn;
+```
+> **`로그인 상태를 확인하는 작업`** 은 다른 라우트에서도 사용될 가능성이 많기 때문에 재사용을 위해 lib 디렉터리에 저장!
+
+이 미들웨어를 posts 라우터에서 사용
+```javascript
+import Router from 'koa-router';
+import * as postsCtrl from './posts.ctrl';
+import checkedLoggedIn from '../../lib/ckeckLoggedIn';
+
+const posts = new Router();
+
+// 여러 종류의 라우트 설정, printInfo 함수 호출
+posts.get('/', postsCtrl.list);
+posts.post('/', checkedLoggedIn, postsCtrl.write); // 포스트 작성 - 로그인 상태 확인 미들웨어
+posts.post('/', postsCtrl.write);
+posts.get('/:id', postsCtrl.checkObjectId, postsCtrl.read);
+posts.delete('/:id', checkedLoggedIn, postsCtrl.remove); // 포스트 삭제 - 로그인 상태 확인 미들웨어
+// posts.put('/:id', postsCtrl.replace);
+posts.patch('/:id', checkedLoggedIn, postsCtrl.update); // 포스트 업데이트 - 로그인 상태 확인 미들웨어
+
+// 리팩토링
+// const post = new Router(); // /api/posts/:id 경로를 위한 라우터
+// post.get('/', postsCtrl.read);
+// post.delete('/', postsCtrl.remove);
+// // posts.put('/:id', postsCtrl.replace);
+// post.patch('/', postsCtrl.update);
+
+// posts.use('/:id', postsCtrl.checkObjectId, post.routes());
+
+export default posts;
+```
+
+
+### 포스트 작성 시 사용자 정보 넣기
+
+
+
+
+
+
+
+### 포스트 수정 및 삭제 시 권한 확인하기
+
 
 
 
