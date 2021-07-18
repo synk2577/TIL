@@ -144,3 +144,19 @@ transition의 default 값 : `**all 0 ease 0**`
 - width & height 크기 조절
 - padding, margin 설정 가능
 
+### gird
+float 프로퍼티로 요소를 정렬할 수 있지만, flexbox, grid를 더 많이 사용
+
+[🔗ref](https://ibrahimovic.tistory.com/23) 
+- `grid-template-colums`
+- `grid-template-rows`
+
+```css
+.wrapper {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 50px 50px;
+}
+```
+> 3개의 column과 2개의 row로 표현      	     
+> 각 칸은 너비 100px, 높이 50로 설정됨		
