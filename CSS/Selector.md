@@ -160,3 +160,47 @@ float 프로퍼티로 요소를 정렬할 수 있지만, flexbox, grid를 더 �
 ```
 > 3개의 column과 2개의 row로 표현      	     
 > 각 칸은 너비 100px, 높이 50로 설정됨		
+
+
+### clip
+**이미지 요소의 일부분**만 보이도록 하기
+```
+clip: auto | shape | initial | inherit
+```
+- auto: 요소의 모든 부분이 나오도록 함
+- shape: 특정 부분이 나오도록 함
+- initial: 기본 값으로 설정
+- inherit: 부모 요소의 속상값을 상속받음
+
+특정 부분만 나오게 할 때 - 네모 모양의 영역		
+% 사용 불가능, 단위는 px
+```
+clip: rect(<top>, <right>, <bottom>, <left>)
+```
+- top: 위를 기준으로 시작하는 위치
+- right: 왼쪽을 기준으로 끝나는 위치
+- bottom: 위를 기준으로 끝나는 위치
+- left: 왼쪽을 기준으로 시작하는 위치
+
+position 속성 값이 `absolute` or `fixed`일때만 적용됨		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
