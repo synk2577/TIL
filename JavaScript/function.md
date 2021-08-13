@@ -56,6 +56,20 @@ const ellie = { name: 'ellie' };
 changeName(ellie);
 console.log(ellie); // {name: "code"}
 ```
+
+### Parameters(매개변수) vs. Arguments(인자)
+- **`Parameters`**: 함수 정의시 받는 변수 값
+  ```javascript
+  function funcName(param1, param2 ...) {
+    ...
+  }
+  ```
+- **`Arguments`**: 함수 호출시 전달되는 값
+  ```javascript
+  funcName(argu1, argu2, ...);
+  ```
+
+
 <br> 
 
 ## Default parameters (ES6)
