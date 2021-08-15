@@ -176,3 +176,11 @@ runtime에서 data type이 결정되기 때문에 error가 runtime으로 발생�
 JavaScript 위에 type이 더해진 언어  
 브라우저가 이해할 수 있는 JavaScript로 트랜스컴파일러를 이용해야 함 (BABEL)
 
+
+<br>
+## Data Type 변환
+- `Number()` : Number 타입으로 변환   
+- `parseInt()` : Number(정수) 타입으로 변환    
+- `parseFloat()` : Number(부동소수점) 타입으로 변환    
+- `String()` : String 타입으로 변환    
+- `Boolean()` : Boolean 타입으로 변환   
