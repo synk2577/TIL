@@ -178,6 +178,7 @@ JavaScript 위에 type이 더해진 언어
 
 
 <br>
+
 ## Data Type 변환
 - `Number()` : Number 타입으로 변환   
 - `parseInt()` : Number(정수) 타입으로 변환    
