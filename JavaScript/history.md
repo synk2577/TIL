@@ -61,8 +61,6 @@
 
 - 2019: ECMAScript10  
 
-<br>
-
 
 ### JavaScript
 Mature, Settled down  
@@ -85,6 +83,8 @@ Microsoft사에서 V8엔진을 대체 사용 (2020~)
 다양한 사용자들이 다양한 브라우저를 사용하지만, **개발자들은 최신 버전의 ECMAScript로 개발**하는 것이 효율적  
 개발시에는 최신 버전의 ECMAScript를 쓰고, 사용자에게 배포시 JavaCript transcompiler를 이용해 ES5나 ES6로 변환된 코드를 생산해주는 것
 
+
+<br>
 
 
 # 자바스크립트의 동향
