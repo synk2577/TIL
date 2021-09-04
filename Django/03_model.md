@@ -41,8 +41,10 @@ model의 변경 사항을 DB Schema에 적용하는 방법
 
 ### Migration Commands
 - `python3 manage.py makemigrations [app_name]` : 마이그레이션 생성       
-  → 변경사항이 마이그레이션 파일로 저장됨    
-- `python3 manage.py migrate [app_name]` : 마이그레이션 적용      
+  → 변경사항이 마이그레이션 파일로 저장됨        
+  → DB 형상관리에 대한 **보고서 작성 -> 실제 DB에 반영되지 않은 상태**        
+- `python3 manage.py migrate [app_name]` : 마이그레이션 적용        
+  → **실제 DB에 반영**
 - `python3 manage.py showmigrations` : 마이그레이션 내역 (히스토리) 확인    
 
 ⇒ **변경사항이 있을 때마다 마이그레이션 적용**해야 함!! 
