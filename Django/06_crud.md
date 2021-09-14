@@ -114,3 +114,39 @@ def signout(req):
     
     return render(req, 'signout.html)
 ```
+
+
+<br>
+
+
+# ORM, QuerySet
+
+## QuerySet
+전달받은 모델의 객체 목록 → DB로부터 데이터를 읽고, 필터를 걸거나 정렬 작업 가능			
+
+Django Shell을 이용한 실습		
+`python3 manage.py shell`: Django Shell 실행 명령어
+
+
+(User 모델을 생성했다는 가정)
+- `>>> from user.models import User`
+    - User 객체를 사용하기 위해 모델을 불러와야 함 
+
+- `>>> User.objects.all()`
+    - 모든 객체 조회 
+
+- `>>> User.objects.create(userid='4',username='테스트4',password='d',gender='M')`
+    - 새로운 객체 생성 → 객체를 새로 만들 때, 모든 속성값들을 설정해야 함 
+
+- `>>> User.objects.filter(gender='W')`
+    - 필터링 (성별이 여자인 객체 필터링)
+
+- `>>> User.objects.order_by('registered')` - 오름차순
+- `>>> User.objects.order_by('-registered')` - 내림차순 (필드명 앞에 `-`)
+    - 정렬 (등록 시간을 기준으로 정렬)
+
+- `exit()`
+    - 장고 shell 종료
+
+
+
