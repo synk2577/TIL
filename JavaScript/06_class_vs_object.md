@@ -196,6 +196,10 @@ console.log(obj); // {value: 7}
 > 
  
 
+### vs. `hasOwnProperty()`   
+객체에 인수로 지정한 **프로퍼티가 존재**하는지 여부 확인 
 
-
+```javascript
+obj.hasOwnProperty(prop)
+```
 
