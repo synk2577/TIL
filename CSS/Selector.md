@@ -5,18 +5,23 @@
 [🔗ref](https://ohgyun.com/572)
 
 
+<br>
 
-### rem, em
+### `rem` vs `em`
+[🔗ref](https://medium.com/watcha/watcha-개발-지식-px-em-rem-f569c6e76e66)
 
-**rem**
-- root em
+- rem: 최상위 태그의 font-size 값이 기준
+- em: 현재 요소의 font-size 값이 기준
+	- em 을 사용해 스타일을 지정한 요소에 따로 font-size 값이 지정되지 않았다면, 해당 요소는 **부모요소로 부터 font-size 값을 상속(inherit)** 받을 것이며, em 은 그 상속 받은 값을 기준으로 삼게 됩니다
 
-**em**
-
+<br>
 
 
 ### white-space
 **스페이스와 탭, 줄바꿈, 자동줄바꿈**을 어떻게 처리할지 정하는 속성 [🔗ref](https://www.codingfactory.net/10597)
+
+
+<br>
 
 
 ### display: flex;
@@ -28,9 +33,10 @@ height는 컨테이너 높이만큼 늘어남
 [🔗참고](https://studiomeal.com/archives/197)
 
 
+<br>
+
 
 ### transition
-
 [🔗 블로그 정리 참고](http://ielselog.blogspot.com/2013/09/understand-css-trasition.html)
 
 아래 4가지 속성의 축약 속성으로 한 번에 4가지 표현 가능
@@ -66,6 +72,8 @@ transition: width 1s ease .5s;
 - **`transition-delay`**
 transition의 default 값 : `**all 0 ease 0**`
 
+
+<br>
 
 
 ### box-sizing
@@ -113,10 +121,7 @@ transition의 default 값 : `**all 0 ease 0**`
 // border-box 적용시, 요소의 너비는 350px;
 ```
 
-
-### inherit 값
-부모 속성으로부터 해당 요소의 값을 받아옴
-
+<br>
 
 
 ### 복합 Selector
@@ -124,6 +129,9 @@ transition의 default 값 : `**all 0 ease 0**`
 - `>` : 자식 관계
 - `+` : 인접 형제 관계 (바로 앞/뒤에 위치)
 - `~` : 일반 형제 관계 (앞/뒤 관계만 성립하면 됨)
+
+
+<br>
 
 
 ### block
@@ -144,6 +152,10 @@ transition의 default 값 : `**all 0 ease 0**`
 - width & height 크기 조절
 - padding, margin 설정 가능
 
+
+<br>
+
+
 ### gird
 float 프로퍼티로 요소를 정렬할 수 있지만, flexbox, grid를 더 많이 사용
 
@@ -160,6 +172,9 @@ float 프로퍼티로 요소를 정렬할 수 있지만, flexbox, grid를 더 �
 ```
 > 3개의 column과 2개의 row로 표현      	     
 > 각 칸은 너비 100px, 높이 50로 설정됨		
+
+
+<br>
 
 
 ### clip
@@ -185,13 +200,31 @@ clip: rect(<top>, <right>, <bottom>, <left>)
 position 속성 값이 `absolute` or `fixed`일때만 적용됨		
 
 
+<br>
 
 
+### overflow
+자식 요소가 부모 영역보다 더 클 때
+- visible 
+- scroll
+- hidden
+- auto
+
+`overflow-x`와 `overflow-y` 속성으로 **가로/세로 축만 스크롤 생성**이 가능함!
+
+#### overflow-x
+- visible: 박스르 넘어가도 그대로 보여줌
+- hidden: 부모 요소 범위르 넘어가면, 보이지 않음 (가로 스크롤바 나타나지 않음)
+- scroll: 부모 요소 범위를 넘어가면, 스크롤바 나옴 (스크롤바 항상 표시)
+- auto: 부모 요소 범위를 넘어가면, 보이지 않도로 하되 스크롤바 표시 (내용이 넘칠때만 스크롤바 표시)
 
 
+<br>
 
 
-
+### margin: auto
+내가 가질 수 있는 여백을 모두 가짐
+-> center 정렬시 상하좌우 여백을 auto로 설정시 각 여백을 모두 가지므로 center 정렬이 됨
 
 
 
