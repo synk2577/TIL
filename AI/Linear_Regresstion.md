@@ -99,6 +99,12 @@ c'(w) = 2(sigma k=1 to n ak^2)*w - 2(sigma k=1 to n ak*bk) = 0
 
 토익 점수에 영향끼치는 요소가 1가지만 있지는 않을 것. 분명 여러 개임         
 → 각 역향들이 모두 동일한 영향력을 갖는 것은 아님! 
+- Single Linear Regression
+    - 인자가 하나
+    - h(x) = ax + b
+- Multi Linear Regression
+    - 인자가 여러개
+    - h(x) = w1x1 + w2x2 + ... + wnxn + b    
 
 h(x) = w_1x_1 + w_2x_2 + ... w_nx_n + b         
 실제 가설함수는 변수가 다양할 것임 -> 각 변수의 **중요도(가중치: `weight`)**
@@ -124,7 +130,76 @@ iii) w3에 대해 편미분 -> w3에 대한 1차식
 그래프를 평평하게 펴야함! 어느 지점이 최저점인지 한번에 파악 할 수 있어야 함!       
 현재 비용함수에 특정 공식을 곱하여 합성함수로 평평한 그래프를 만들면 됨! -> 경사하강법을 적용할 수 있는 극소값이 하나뿐이 그래프가 됨   
 
+<br>
 
+# Code 
+실제 AI 알고리즘을 적용할 때는 w값을 식으로 한번에 구할 수 없기 때문에 경사하강법을 이용해 최적값을 찾아야 함       
 
+c(w)의 최소값을 찾아감에 있어      
+- c'(a)>0; a-=kc'(a) 반복
+- c'(a)<0; a-=kc'(a) 반복 (c'(a)가 음수이므로 -임에 주의)
+- c'(a)=0; 최소값을 찾았으므로 반복문 탈출
+=> c(a): 함수 c(w)의 최소값
 
+<br>
 
+다음을 코드로 구현해보자면?
+```python
+# Single Linear Regression - cost 함수 c(w)의 최소값 구하기
+# 단, h(x)=wx로 b는 무시
+
+a = 랜덤값
+for 충분히 반복: # 단, 유한 반복
+    if c'(a) != 0:
+        a -= k*c'(a) # 단 k는 임의의 실수
+    else:
+        for문 탈출
+
+# w=a 일때 c(w)는 최소값 c(a)를 가짐
+```
+
+`min_w = min_w -k*c'(min_w)`        
+다음 식에서 k를 `lr`로 용어 변경! (learning rate: 학습률)     
+
+인공지능이 제대로 학습하기 위해서는 적당한 `lr`값을 정하는 것이 필수적임!!!
+- 너무 큰 lr을 지정하면
+    - 최소값을 영원히 못찾게 됨
+    - cost가 오히려 올라갈 수 있음   
+- 너무 작은 lr을 지정하면
+    - 최소값까지 도달하는데 너무 오랜 시간이 걸릴 수도 있음
+- 적당한 lr을 지정하면 cost가 계속 낮아지는 쪽으로 min_w 값이 조정되어 최소값에 도달하게 됨!!  
+
+<br>
+
+```python
+import torch
+
+"""학습할 데이터"""
+x_train = torch.FloatTensor([[30],[60],[90]]) # 학습데이터의 x
+y_train = torch.FloatTensor([[700],[750],[800]]) # 학습데이터의 y
+# tensor: 3차원 데이터로 1,2 차원 데이터 연산도 가능 -> GPU 연산에 특화
+
+# zeros(n): n차원의 tenser
+W = torch.zeros(1) 
+b = torch.zeros(1)
+
+"""learning rate"""
+lr = 0.0002
+
+epochs = 400000
+
+len_x = len(x_train)
+
+for epoch in range(epochs):
+  hypothesis = x_train * W + b
+  cost = torch.mean((hypothesis -y_train)**2)
+
+  gradient_w = torch.sum((W*x_train - y_train +b)*x_train)/ len_x # cost함수를 w에 대해서 함성함수 편미분 -> 편의상 2(상수) 없앰
+  gradient_b = torch.sum((W*x_train - y_train +b))/len_x # cost함수를 b에 대해서 함성함수 편미분 / 학습 데이터의 개수만큼 나누어 평균으로 이동 
+
+  W -= lr * gradient_w
+  b -= lr * gradient_b
+  
+  if epoch % 10000 == 0: # for문 10000번마다 트랙킹
+    print('Epoch {:4d}/{} W:{:.6f} b:{:.6f} Cost: {:.6f}'.format(epoch,epochs,W.item() ,b.item() , cost.item()))
+```
